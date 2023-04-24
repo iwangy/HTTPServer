@@ -8,24 +8,6 @@ public class HTTPServer {
   private static final String BASE_DIRECTORY = "./";
   private static final String DEFAULT_MIME_TYPE = "text/plain";
 
-  
-  // public static void main(String[] args) {
-  //   try {
-  //     ServerSocket server = new ServerSocket(port);
-  //     System.out.println("Listening for connection on port " + port);
-    
-  //     while (true) {
-  //       Socket clientSocket = server.accept();
-  //       System.out.println("Client Connected");
-
-  //       Thread thread = new Thread(new ClientHandler(clientSocket));
-  //       thread.start();
-  //     }
-  //   } catch (IOException e) {
-  //     System.err.println("Error: " + e.getMessage());
-  //     e.printStackTrace();
-  //   }
-  // }
   public static void main(String[] args) throws IOException {
     ServerSocket server = new ServerSocket(port);
     System.out.println("Listening for connection on port " + port);
@@ -35,33 +17,9 @@ public class HTTPServer {
         Socket clientSocket = server.accept();
         System.out.println("Client Connected");
 
-  //     }
-  //   }
-    
-  // }
-
-  // private static class ClientHandler implements Runnable {
-  //   private final Socket clientSocket;
-
-  //   public ClientHandler(Socket clientSocket) {
-  //     this.clientSocket = clientSocket;
-  //   }
-
-  //   @Override
-  //   public void run() {
-  //     try {
         BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));  
         String line = reader.readLine();
         System.out.println(line);
-
-        // String[] parts = null;
-        // String method ="";
-        // String path="";
-        // if(line != null) {
-        //   parts = line.split(" ");
-        //   method = parts[0];
-        //   path = parts[1];
-        // }
 
         String[] parts = line.split(" ");
         String method = parts[0];
