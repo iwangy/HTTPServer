@@ -20,42 +20,10 @@ public class HTTPServer {
         BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));  
         String line = reader.readLine();
 
-        String body = "";
         String method = line.split(" ", 3)[0];
         String path = line.split(" ", 3)[1];
         String response = "";
-        
-
-        // if (line != null) {
-        //   method = line.split(" ", 3)[0];
-        //   path = line.split(" ", 3)[1];
-
-        //   System.out.println(method);
-        //   System.out.println(path);
-          
-        //   String lines = "";
-        //   while((lines = reader.readLine()) != null) {
-        //     if(lines.contains("Content-Length")) {
-        //       break;
-        //     } else {
-        //       break;
-        //     }
-        //   }
-        //   int cLength = Integer.valueOf(lines.split(" ")[1]);
-        //   reader.readLine();
-        //   for (int i = 0, c = 0; i < cLength; i++) {
-        //     c = reader.read();
-        //     body += (char)c;
-        //   }
-
-        //   System.out.println(method);
-        //   System.out.println(path);
-        // }
-        
-        System.out.println(body + "1");
-        System.out.println(method + "2");
-        System.out.println(path + "3");
-
+                
         if ("GET".equalsIgnoreCase(method)) {
           response = handleGetRequest(path);
         } else if ("POST".equalsIgnoreCase(method)) {
