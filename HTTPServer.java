@@ -88,51 +88,9 @@ public class HTTPServer {
   private static String handlePostRequest(String path, BufferedReader reader) throws IOException {
     Path filePath = Paths.get(BASE_DIRECTORY + path);
     System.out.println("POST REQ");
-
-    String mimeType = getMimeType(filePath);
-    // mimeType.equals("text/plain"
-    String[] temp = path.split("\\.");
-    String extension = temp[1];
-    if (SUPPORTED_MIME_TYPES.containsKey(extension)) {
-
-      if(!Files.exists(filePath)) {
-        Files.createDirectories(filePath.getParent());
-        Files.createFile(filePath);
-      }
-      
-      BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toFile(), true));
-      String line;
-      String body = "";
-      while((line = reader.readLine()) != null) {
-        if(line.contains("Content-Length")) break;
-      }
-      int cLength = Integer.valueOf(line.split(" ")[1]);
-      reader.readLine();
-      for (int i = 0, c = 0; i <= cLength + 1; i++) {
-        c = reader.read();
-        body += (char)c;
-      }
-      body.trim();
-      writer.write(body);
-      writer.flush();
-      writer.close();
-      String response = "HTTP/1.1 200 OK\r\nContent-Type: " + mimeType + "\r\nContent-Length: " + body.length() + "\r\n\r\n";
-      return response + body;
-    } else {
-      byte[] imageBytes = Files.readAllBytes(Paths.get("415.jpg"));
-      String base64Image = java.util.Base64.getEncoder().encodeToString(imageBytes);
-      String htmlResponse = "<html><body><h1>Error 415</h1><p>Unsupported Media Type</p><img src='data:image/jpeg;base64,"
-      + base64Image + "'></body></html>";
-      return "HTTP/1.1 415 Unsupported Media Type\r\nUnsupported MIME type for POST request\r\n\r\n" + htmlResponse;
-    }
-  }
-
-  private static String handlePutRequest(String path, BufferedReader reader) throws IOException {
-    Path filePath = Paths.get(BASE_DIRECTORY + path);
-    System.out.println("PUT REQ");
     String mimeType = getMimeType(filePath);
     if (Files.exists(filePath) && Files.isRegularFile(filePath)) {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toFile()));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toFile(), true));
         String line;
         String body = "";
         while((line = reader.readLine()) != null) {
@@ -160,6 +118,48 @@ public class HTTPServer {
       String htmlResponse = "<html><body><h1>Error 404</h1><p>Not Found</p><img src='data:image/jpeg;base64,"
       + base64Image + "'></body></html>";
       return  "HTTP/1.1 404 Not Found\r\nFile not found\r\n\r\n" + htmlResponse;
+    }
+  }
+
+  private static String handlePutRequest(String path, BufferedReader reader) throws IOException {
+    Path filePath = Paths.get(BASE_DIRECTORY + path);
+    System.out.println("PUT REQ");
+
+    String mimeType = getMimeType(filePath);
+    // mimeType.equals("text/plain"
+    String[] temp = path.split("\\.");
+    String extension = temp[1];
+    if (SUPPORTED_MIME_TYPES.containsKey(extension)) {
+
+      if(!Files.exists(filePath)) {
+        Files.createDirectories(filePath.getParent());
+        Files.createFile(filePath);
+      }
+      
+      BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toFile()));
+      String line;
+      String body = "";
+      while((line = reader.readLine()) != null) {
+        if(line.contains("Content-Length")) break;
+      }
+      int cLength = Integer.valueOf(line.split(" ")[1]);
+      reader.readLine();
+      for (int i = 0, c = 0; i <= cLength + 1; i++) {
+        c = reader.read();
+        body += (char)c;
+      }
+      body.trim();
+      writer.write(body);
+      writer.flush();
+      writer.close();
+      String response = "HTTP/1.1 200 OK\r\nContent-Type: " + mimeType + "\r\nContent-Length: " + body.length() + "\r\n\r\n";
+      return response + body;
+    } else {
+      byte[] imageBytes = Files.readAllBytes(Paths.get("415.jpg"));
+      String base64Image = java.util.Base64.getEncoder().encodeToString(imageBytes);
+      String htmlResponse = "<html><body><h1>Error 415</h1><p>Unsupported Media Type</p><img src='data:image/jpeg;base64,"
+      + base64Image + "'></body></html>";
+      return "HTTP/1.1 415 Unsupported Media Type\r\nUnsupported MIME type for POST request\r\n\r\n" + htmlResponse;
     }
   }
 
